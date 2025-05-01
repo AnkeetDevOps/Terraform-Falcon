@@ -1,1 +1,21 @@
-Test
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: say-hello
+    image: alpine
+    commands:
+      - echo "Hello from Drone CI!"
+
+  - name: check-files
+    image: alpine
+    commands:
+      - ls -la
+      - echo "All files listed."
+
+  - name: goodbye
+    image: alpine
+    commands:
+      - echo "Goodbye from Drone pipeline!"
+
