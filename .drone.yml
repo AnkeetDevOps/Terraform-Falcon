@@ -14,8 +14,25 @@ steps:
       - ls -la
       - echo "All files listed."
 
+  - name: build-docker-image
+    image: docker
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -t test-image:latest .
+
+  - name: scan-docker-image
+    image: aquasec/trivy:latest
+    commands:
+      - trivy image test-image:latest
+
   - name: goodbye
     image: alpine
     commands:
       - echo "Goodbye from Drone pipeline!"
 
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
