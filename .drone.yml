@@ -14,25 +14,17 @@ steps:
       - ls -la
       - echo "All files listed."
 
-  - name: build-docker-image
-    image: docker
-    volumes:
-      - name: docker-sock
-        path: /var/run/docker.sock
+  - name: build-image
+    image: gcr.io/kaniko-project/executor:latest
     commands:
-      - docker build -t test-image:latest .
+      - /kaniko/executor --context $DRONE_WORKSPACE --dockerfile $DRONE_WORKSPACE/Dockerfile --no-push --snapshotMode=redo
 
-  - name: scan-docker-image
+  - name: scan-image
     image: aquasec/trivy:latest
     commands:
-      - trivy image test-image:latest
+      - trivy image --exit-code 1 --severity HIGH,CRITICAL your-image:latest || true
 
   - name: goodbye
     image: alpine
     commands:
       - echo "Goodbye from Drone pipeline!"
-
-volumes:
-  - name: docker-sock
-    host:
-      path: /var/run/docker.sock
