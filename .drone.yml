@@ -14,15 +14,11 @@ steps:
       - ls -la
       - echo "All files listed."
 
-  - name: build-image
+  - name: build
     image: gcr.io/kaniko-project/executor:latest
-    entrypoint:
-      - /kaniko/executor
-    args:
-      - --context=dir://$DRONE_WORKSPACE
-      - --dockerfile=$DRONE_WORKSPACE/Dockerfile
-      - --no-push
-      - --snapshotMode=redo
+    commands:
+      - /kaniko/executor --context $DRONE_WORKSPACE --dockerfile $DRONE_WORKSPACE/Dockerfile --no-push
+
 
   - name: scan-image
     image: aquasec/trivy:latest
