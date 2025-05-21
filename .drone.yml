@@ -16,14 +16,13 @@ steps:
 
   - name: build-image
     image: gcr.io/kaniko-project/executor:latest
-    command:
+    entrypoint:
       - /kaniko/executor
     args:
-      - "--context=dir://$DRONE_WORKSPACE"
-      - "--dockerfile=$DRONE_WORKSPACE/Dockerfile"
-      - "--no-push"
-      - "--snapshotMode=redo"
-
+      - --context=dir://$DRONE_WORKSPACE
+      - --dockerfile=$DRONE_WORKSPACE/Dockerfile
+      - --no-push
+      - --snapshotMode=redo
 
   - name: scan-image
     image: aquasec/trivy:latest
